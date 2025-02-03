@@ -18,8 +18,13 @@ class Roulette:
     def get_balance(self) -> int:
         return self.balance
 
-    def bet(self, amount:int, type: str, index: int) -> None:
-        self.active_bet = Bet(amount, type, self.roulette[index])
+    def bet(self, amount:int, bet:str) -> None:
+        if amount > self.balance:
+            return
+        try:
+            self.active_bet = Bet(amount, number=self.roulette[int(bet)])
+        except (ValueError, IndexError):
+            self.active_bet = Bet(amount, color=bet)        
 
     def play(self) -> Number:
         if self.active_bet is None:
@@ -33,10 +38,10 @@ class Roulette:
         return number
 
     def main(self) -> None:
-        play_number: int = int(input("Choisir un numéro entre 0 et 36 : "))
+        play_number = str(input("Choisir un numéro entre 0 et 36 : "))
         bet_amout: int = int(input(f"Placer un pari (balance : {self.balance}) : "))
 
-        game.bet(bet_amout, "number", play_number)
+        game.bet(bet_amout, play_number)
         number: Number = game.play()
 
         print(f"Le numéro {number.get_value()} est tombé !")
@@ -49,5 +54,8 @@ class Roulette:
         self.active_bet = None
 
 game = Roulette()
-while True:
+end: bool = False
+while not end:
     game.main()
+    if game.get_balance() <= 0:
+        end = True

@@ -1,13 +1,13 @@
 class Number:
 
-    value: int
+    value: str
     color: str
 
-    def __init__(self, value: int, color: str) -> None:
+    def __init__(self, value: str, color: str) -> None:
         self.value = value
         self.color = color
 
-    def get_value(self) -> int:
+    def get_value(self) -> str:
         return self.value
 
     def get_color(self) -> str:
@@ -16,5 +16,5 @@ class Number:
     def check_value(self, number) -> bool:
         return self.get_value() == number.get_value()
 
-    def check_color(self, number) -> bool:
-        return self.get_color() == number.get_color()
+    def check_color(self, color: str) -> bool:
+        return self.get_color() == color
