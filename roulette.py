@@ -6,7 +6,7 @@ class Roulette:
 
     roulette: list[Number]
     balance: int = 100
-    active_bet: Bet
+    active_bets: list[Bet] = []
 
     def __init__(self) -> None:
         colors = ["G", "R", "B", "R", "B", "R", "B", "R", "B", "R", "B", "B", 
@@ -22,40 +22,48 @@ class Roulette:
         if amount > self.balance:
             return
         try:
-            self.active_bet = Bet(amount, number=self.roulette[int(bet)])
+            self.active_bets.append(Bet(amount, number=self.roulette[int(bet)]))
         except (ValueError, IndexError):
-            self.active_bet = Bet(amount, color=bet)        
+            self.active_bets.append(Bet(amount, color=bet[0]))
 
     def play(self) -> Number:
-        if self.active_bet is None:
+        if len(self.active_bets) == 0:
             return
         
-        self.balance -= self.active_bet.get_amount()
+        for bet in self.active_bets:
+            self.balance -= bet.get_amount()
 
         index: int = randint(0, 36)
         number: Number = self.roulette[index]
 
         return number
+    
+    def check_bet(self, result) -> int:
+        gain: int = 0
+        for bet in self.active_bets:
+            gain += bet.check(result)
+
+        self.balance += gain
+        self.active_bets = []
+
+        return gain
 
     def main(self) -> None:
         play_number = str(input("Choisir un numéro entre 0 et 36 : "))
         bet_amout: int = int(input(f"Placer un pari (balance : {self.balance}) : "))
 
-        game.bet(bet_amout, play_number)
-        number: Number = game.play()
+        self.bet(bet_amout, play_number)
+        number: Number = self.play()
 
         print(f"Le numéro {number.get_value()} est tombé !")
 
-        gain: int = self.active_bet.check(number)
-        self.balance += gain
+        gain: int = self.check_bet(number)
 
         print(f"Vous avez gagné {gain}€ (balance {self.balance})")
 
-        self.active_bet = None
-
-game = Roulette()
-end: bool = False
-while not end:
-    game.main()
-    if game.get_balance() <= 0:
-        end = True
+# game = Roulette()
+# end: bool = False
+# while not end:
+#     game.main()
+#     if game.get_balance() <= 0:
+#         end = True

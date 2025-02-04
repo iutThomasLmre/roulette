@@ -16,6 +16,12 @@ body, html {
     font-family: 'Roboto', sans-serif;
 }
 
+.df {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .bet-container {
     height: calc(var(--number-size) * 3);
     width: calc(var(--number-size) * 13);
