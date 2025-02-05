@@ -1,7 +1,10 @@
 [python | py] -m venv .venv
 .venv\Scripts\activate
 
-pip install (--proxy http://cache.iut-rodez.fr:8080) <name>
+pip install (--proxy http://cache.iut-rodez.fr:8080) <librairie>
+
+librairies:
+    - Flask
 
 set FLASK_APP app
 set FLASK_ENV development

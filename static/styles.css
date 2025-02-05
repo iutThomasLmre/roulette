@@ -1,103 +1,352 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
-    --number-size: 40px;
+    --number-size: 50px;
 }
 
-* {
-    box-sizing: border-box;
-}
-
-body, html {
+body,
+html {
     padding: 0;
     margin: 0;
     height: 100vh;
     width: 100vw;
     font-family: 'Roboto', sans-serif;
+    background-color: #1a1a1a;
+    color: #f9fafa;
 }
 
-.df {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+body {
+    padding: 64px 10%;
 }
 
-.bet-container {
-    height: calc(var(--number-size) * 3);
-    width: calc(var(--number-size) * 13);
+* {
+    box-sizing: border-box !important;
+}
 
-    .numbers-wrapper {
+.green {
+    background-color: #57f287;
+}
+
+.red {
+    background-color: #5a77fe;
+}
+
+.black {
+    background-color: #393939;
+}
+
+
+.game-container {
+    height: 512px;
+
+    .game-wrapper {
         height: 100%;
         display: flex;
+        gap: 16px;
 
-        > * {
+        .bet-container {
             height: 100%;
+            width: 30%;
+            border: 1px solid rgb(39 40 40 / 1);
+            background-color: #1c1c1c;
+            border-radius: 8px;
+
+            .bet-wrapper {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                justify-content: space-between;
+                height: 100%;
+                width: 100%;
+                padding: 32px;
+
+                .history-container,
+                .balance-container,
+                .betting-container,
+                .actions-container {
+                    width: 100%;
+
+                    .history-wrapper,
+                    .balance-wrapper,
+                    .betting-wrapper,
+                    .actions-wrapper {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+
+                        .title-history,
+                        .title-balance,
+                        .title-betting,
+                        .title-actions {
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #8d8d8d;
+                        }
+
+                        .group-history {
+                            display: flex;
+                            flex-direction: row-reverse;
+                            justify-content: flex-end;
+                            gap: 8px;
+                            min-height: var(--number-size);
+
+                            .history-item {
+                                height: var(--number-size);
+                                width: var(--number-size);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 4px;
+                                color: #f9fafa;
+                                font-size: 14px;
+                                font-weight: 600;
+                            }
+                        }
+
+                        .group-betting {
+                            display: flex;
+                            justify-content: space-between;
+                            gap: 8px;
+
+                            .betting-item {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                height: calc(var(--number-size) * .75);
+                                width: calc(var(--number-size) * .75);
+                                font-size: 12px;
+                                font-weight: 700;
+                                color: #1c1c1c;
+                                border-radius: 50%;
+                                cursor: pointer;
+                                user-select: none;
+
+                                &.xs {
+                                    background-color: #484848;
+                                }
+
+                                &.s {
+                                    background-color: #ff6e6e;
+                                }
+
+                                &.sm {
+                                    background-color: #ffc869;
+                                }
+
+                                &.m {
+                                    background-color: #a558ff;
+                                }
+
+                                &.l {
+                                    background-color: #ff599a;
+                                }
+
+                                &.xl {
+                                    background-color: #63ff97;
+                                }
+
+                                &.selected {
+                                    border: 1px solid #f9fafa;
+                                }
+                            }
+                        }
+
+                        .value-balance,
+                        .betting-amount {
+                            width: 100%;
+                            padding: 12px 16px;
+                            background-color: #222;
+                            border-radius: 4px;
+                            user-select: none;
+                        }
+
+                        .group-actions {
+                            display: flex;
+                            justify-content: space-between;
+                            gap: 8px;
+
+                            .action-item {
+                                flex: 1;
+                                height: var(--number-size);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                user-select: none;
+                                font-size: 14px;
+                                font-weight: 600;
+
+                                &.primary {
+                                    background-color: #5a77fe;
+                                }
+
+                                &.disabled {
+                                    background-color: #393939CC;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        .group-numbers {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
+        .roulette-container {
+            height: 100%;
+            width: 70%;
+
+            .roulette-wrapper {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+
+                &>* {
+                    flex: 1;
+                    width: 100%;
+                }
+
+                .wheel-container {
+                    .wheel-wrapper {
+                        height: 100%;
+                        z-index: 0;
+                        position: relative;
+
+                        .wheel-object {
+                            top: 50px;
+                            left: calc(50% - 200px);
+                            transition: .3s ease-in-out 0s all;
+                            transform-origin: center center !important;
+                            rotate: 0deg;
+                            position: absolute;
+                        }
+
+                        .picker {
+                            top: 55%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            position: absolute;
+                            height: 80px;
+                            width: 3px;
+                            background: linear-gradient(0deg, #1a1a1a 50%, #f9fafa);
+                        }
+                    }
+                }
+
+                .grid-container {
+                    z-index: 1;
+                    border: 1px solid rgb(39 40 40 / 1);
+                    background-color: #1c1c1c;
+                    border-radius: 8px;
+
+                    .grid-wrapper {
+                        height: 100%;
+                        width: 100%;
+                        padding: 32px;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+
+                        .numbers-wrapper {
+                            height: calc(var(--number-size) * 3);
+                            display: flex;
+
+                            >* {
+                                height: 100%;
+                            }
+
+                            .group-numbers {
+                                display: grid;
+                                grid-template-columns: repeat(12, 1fr);
+                            }
+
+                            .item-bet-wrapper {
+                                width: var(--number-size);
+                                padding: 3px;
+
+                                .item-bet-number {
+                                    height: 100%;
+                                    width: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    user-select: none;
+                                    font-size: 14px;
+                                    font-weight: 600;
+
+                                    &.active {
+                                        align-items: flex-start;
+                                        justify-content: flex-end;
+                                        position: relative;
+
+                                        &::before {
+                                            position: absolute;
+                                            content: '';
+                                            width: 20px;
+                                            height: 20px;
+                                            background-color: #f9fafa;
+                                            border-radius: 50%;
+                                            bottom: 0;
+                                            left: 0;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        .colors-wrapper {
+                            width: calc(var(--number-size) * 13);
+                            display: flex;
+
+                            .item-bet-wrapper {
+                                flex: 1;
+                                height: var(--number-size);
+                                padding: 3px;
+
+                                .item-bet-color {
+                                    height: 100%;
+                                    width: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    border-radius: 4px;
+                                    cursor: pointer;
+                                    user-select: none;
+                                    font-size: 14px;
+                                    font-weight: 600;
+
+                                    &.active {
+                                        position: relative;
+
+                                        &::before {
+                                            position: absolute;
+                                            content: '';
+                                            width: 20px;
+                                            height: 20px;
+                                            background-color: #f9fafa;
+                                            border-radius: 50%;
+                                            bottom: 50%;
+                                            left: 50%;
+                                            transform: translate(-50%, 50%);
+                                        }
+                                    }
+
+                                    &.black {
+                                        color: #393939
+                                    }
+
+                                    &.red {
+                                        color: #5a77fe
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-
-        .item-number {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: var(--number-size);
-            border: 1px solid #000;
-            cursor: pointer;
-            user-select: none;
-            font-size: 13px;
-            font-weight: 500;
-        }
-    }
-
-    .color-wrapper {
-        width: 100%;
-        display: flex;
-
-        .item-color {
-            flex: 1;
-            height: var(--number-size);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #000;
-            cursor: pointer;
-            user-select: none;
-            font-size: 13px;
-            font-weight: 500;
-        }
-    }
-
-    .green {
-        background-color: green;
-    }
-
-    .red {
-        background-color: red;
-    }
-
-    .black {
-        background-color: #000;
-        color: #fff;
-    }
-
-    .item-number.active,
-    .item-color.active {
-        position: relative;
-    }
-
-    .item-number.active::after, 
-    .item-color.active::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: calc(var(--number-size) - 10px);
-        height: calc(var(--number-size) - 10px);
-        border-radius: 50%;
-        background-color: rgb(199, 202, 216);
     }
 }

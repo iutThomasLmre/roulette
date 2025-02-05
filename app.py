@@ -35,7 +35,10 @@ def bet():
             "balance": start_balance,
             "profit": game.get_balance() - start_balance,
             "bet": bet_data,
-            "result": result_number.get_value(),
+            "result": {
+                "number": result_number.get_value(),
+                "color": result_number.get_color()
+            },
         }), 200
     
     return jsonify({
