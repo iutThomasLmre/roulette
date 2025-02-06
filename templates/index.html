@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://kit.fontawesome.com/4d6659720c.js" crossorigin="anonymous"></script>
     <title>Roulette</title>
 </head>
 
@@ -19,8 +20,13 @@
                             <div class="title-balance">
                                 Balance
                             </div>
-                            <div class="value-balance" id="balance">
-                                1000
+                            <div class="group-balance">
+                                <div class="value-balance" id="balance">
+                                    {{ balance }}
+                                </div>
+                                <div class="action-item disabled" id="new">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -39,14 +45,14 @@
                                 Mise
                             </div>
                             <div class="group-betting">
-                                <div class="betting-item xs selected">1</div>
+                                <div class="betting-item xs active">1</div>
                                 <div class="betting-item s">5</div>
                                 <div class="betting-item sm">10</div>
                                 <div class="betting-item m">50</div>
                                 <div class="betting-item l">100</div>
                                 <div class="betting-item xl">500</div>
                             </div>
-                            <div class="betting-amount">
+                            <div class="betting-amount" id="total-bet">
                                 0
                             </div>
                         </div>
@@ -68,7 +74,7 @@
                 <div class="roulette-wrapper">
                     <div class="wheel-container">
                         <div class="wheel-wrapper">
-                            <img class="wheel-object" id="wheel" src="{{ url_for('static', filename='assets/roulette.png') }}" alt="roulette">
+                            <img class="wheel-object" id="wheel" src="{{ url_for('static', filename='assets/roulette.png') }}" alt="roulette" draggable="false">
                             <div class="picker"></div>
                         </div>
                     </div>
@@ -76,129 +82,134 @@
                         <div class="grid-wrapper">
                             <div class="numbers-wrapper">
                                 <div class="item-bet-wrapper">
-                                    <div class="item-bet-number green">0</div>
+                                    <div class="item-bet-number green" id="0">0</div>
                                 </div>
                                 <div class="group-numbers">
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">3</div>
+                                        <div class="item-bet-number red" id="3">3</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">6</div>
+                                        <div class="item-bet-number black" id="6">6</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">9</div>
+                                        <div class="item-bet-number red" id="9">9</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">12</div>
+                                        <div class="item-bet-number red" id="12">12</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">15</div>
+                                        <div class="item-bet-number black" id="15">15</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">18</div>
+                                        <div class="item-bet-number red" id="18">18</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">21</div>
+                                        <div class="item-bet-number red" id="21">21</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">24</div>
+                                        <div class="item-bet-number black" id="24">24</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">27</div>
+                                        <div class="item-bet-number red" id="27">27</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">30</div>
+                                        <div class="item-bet-number red" id="30">30</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">33</div>
+                                        <div class="item-bet-number black" id="33">33</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">36</div>
+                                        <div class="item-bet-number red" id="36">36</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">2</div>
+                                        <div class="item-bet-number black" id="2">2</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">5</div>
+                                        <div class="item-bet-number red" id="5">5</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">8</div>
+                                        <div class="item-bet-number black" id="8">8</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">11</div>
+                                        <div class="item-bet-number black" id="11">11</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">14</div>
+                                        <div class="item-bet-number red" id="14">14</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">17</div>
+                                        <div class="item-bet-number black" id="17">17</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">20</div>
+                                        <div class="item-bet-number black" id="20">20</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">23</div>
+                                        <div class="item-bet-number red" id="23">23</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">26</div>
+                                        <div class="item-bet-number black" id="26">26</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">29</div>
+                                        <div class="item-bet-number black" id="29">29</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">32</div>
+                                        <div class="item-bet-number red" id="32">32</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">35</div>
+                                        <div class="item-bet-number black" id="35">35</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">1</div>
+                                        <div class="item-bet-number red" id="1">1</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">4</div>
+                                        <div class="item-bet-number black" id="4">4</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">7</div>
+                                        <div class="item-bet-number red" id="7">7</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">10</div>
+                                        <div class="item-bet-number black" id="10">10</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">13</div>
+                                        <div class="item-bet-number black" id="13">13</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">16</div>
+                                        <div class="item-bet-number red" id="16">16</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">19</div>
+                                        <div class="item-bet-number red" id="19">19</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">22</div>
+                                        <div class="item-bet-number black" id="22">22</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">25</div>
+                                        <div class="item-bet-number red" id="25">25</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">28</div>
+                                        <div class="item-bet-number black" id="28">28</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number black">31</div>
+                                        <div class="item-bet-number black" id="31">31</div>
                                     </div>
                                     <div class="item-bet-wrapper">
-                                        <div class="item-bet-number red">34</div>
+                                        <div class="item-bet-number red" id="34">34</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="colors-wrapper">
                                 <div class="item-bet-wrapper">
-                                    <div class="item-bet-color red">Red</div>
+                                    <div class="item-bet-color red" id="Red">Red</div>
                                 </div>
                                 <div class="item-bet-wrapper">
-                                    <div class="item-bet-color black">Black</div>
+                                    <div class="item-bet-color black" id="Black">Black</div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="auto-game-container">
+                <div class="auto-game-wrapper">
+
                 </div>
             </div>
         </div>

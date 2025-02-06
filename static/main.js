@@ -1,11 +1,14 @@
 const CANCEL = document.getElementById("cancel");
 const PLAY = document.getElementById("play");
-const NEW_GAME = document.getElementById("new-game");
+const NEW = document.getElementById("new");
 
-let elements = document.querySelectorAll(".item-bet-number, .item-bet-color");
+let betElements = document.querySelectorAll(".item-bet-number, .item-bet-color");
+let chips = document.querySelectorAll(".betting-item");
+let chipValue = 1;
 let bets = [];
 let balance = 100;
 let history = [];
+let totalBet = 0;
 
 const MAP_WHEEL = [
     { number: 0, deg: 0 },
@@ -51,21 +54,48 @@ const toggleActive = (element, add) => {
     element.classList[add ? 'add' : 'remove']('active');
 };
 
+const placeChip = (element, bet) => {
+    element.innerHTML 
+    = `${element.getAttribute('id')}<div class="bet-chip-item ${bet.value >= 500 ? "xl" : bet.value >= 100 ? "l" : bet.value >= 50 ? "m" : bet.value >= 10 ? "sm" : bet.value >= 5 ? "s" : "xs"}">${bet.value}</div>`;
+}
+
 const placeBet = (bet) => {
-    bet = { ...bet, value: 1 };
+    console.log(chipValue, balance);
+
+    if(chipValue > balance)
+        return;
+
+    bet = { ...bet, value: chipValue };
     let existingBet = bets.find(b => b.bet === bet.bet);
-    existingBet ? existingBet.value++ : bets.push(bet);
-    console.log(bets);
+    existingBet ? existingBet.value+=chipValue : bets.push(bet);
+    totalBet += chipValue;
+    updateTotalBet();
+    return existingBet ?? bet;
 };
+
+const updateTotalBet = () => {
+    balance -= chipValue;
+    document.getElementById('balance').innerText = balance;
+    document.getElementById("total-bet").innerHTML = totalBet;
+}
 
 const removeAllBets = () => {
-    elements.forEach(element => toggleActive(element, false));
+    betElements.forEach(element => {
+        toggleActive(element, false)
+        element.innerHTML = element.getAttribute("id");
+    });
     bets = [];
+    totalBet = 0;
+    updateTotalBet();
 };
 
-const updateBalance = () => {
-    let displayBalance = document.getElementById("balance");
-    displayBalance.innerHTML = balance;
+function updateBalance() {
+    fetch('/get_balance')
+        .then(response => response.json())
+        .then(data => {
+            balance = data.balance;
+            document.getElementById('balance').innerText = balance;
+        });
 }
 
 const updateResult = (result) => {
@@ -90,6 +120,7 @@ const spinWheel = (result) => {
         wheel.style.transition = "none";
         wheel.style.transform = `rotate(${-deg}deg)`;
         displayResult(result);
+        updateBalance();
         removeAllBets();
     }, 4000);
 };
@@ -99,16 +130,27 @@ const displayResult = (result) => {
     displayHistory.innerHTML = history.map(res => `<div class="history-item ${res.color == "B" ? "black" : res.color == "R" ? "red" : "green"}">${res.number}</div>`).join(" ");
 };
 
-elements.forEach(element => {
+betElements.forEach(element => {
     element.addEventListener("click", () => {
-        toggleActive(element, true);
-        let bet = { bet: element.innerHTML };
+        let bet = { bet: element.getAttribute('id') };
         let updatedBet = placeBet(bet);
-        if (element.classList.contains("active")) {
-            element.textContent = `${updatedBet.bet} (${updatedBet.value})`;
-        }
+        placeChip(element, updatedBet);
+        toggleActive(element, true);
     });
 });
+
+chips.forEach(chip => {
+    chip.addEventListener("click", () => {
+        chipValue = parseInt(chip.innerHTML);
+
+        chips.forEach(chipSelected => {
+            if(chip == chipSelected)
+                toggleActive(chip, true);
+            else
+                toggleActive(chipSelected, false);
+        });
+    });
+})
 
 const sendBets = () => {
     fetch('/bet', {
@@ -120,20 +162,27 @@ const sendBets = () => {
     })
     .then(response => response.json())
     .then(data => {
-        balance = data.balance + data.profit;
-        updateBalance();
         updateResult(data.result);
     })
     .catch(error => console.error("Error sending bets:", error));
 };
 
-updateBalance();
+const sendNewGame = () => {
+    fetch('/new', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateBalance();
+    })
+    .catch(error => console.error("Error sending bets:", error));
+}
 
 PLAY.addEventListener("click", () => {
     sendBets();
 });
-NEW_GAME.addEventListener("click", () => {
-    removeAllBets();
-    sendNewGame();
-});
 CANCEL.addEventListener("click", removeAllBets);
+NEW.addEventListener("click", sendNewGame);

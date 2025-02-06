@@ -7,21 +7,21 @@ game = Roulette()
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    game.reset()
+    return render_template('index.html', balance=game.get_balance())
 
-@app.route('/new-game')
+@app.route('/get_balance', methods=['GET'])
+def get_balance():
+    return jsonify({"balance": game.get_balance()})
+
+@app.route('/new', methods=['GET'])
 def new_game():
-    game = Roulette()
-
-    return jsonify({
-        "balance": game.get_balance()
-    }), 200
+    game.reset()
+    return jsonify({"message": "Nouvelle roulette créée", "balance": game.get_balance()})
 
 @app.route('/bet', methods=['POST'])
 def bet():
     bet_data = request.json
-
-    print(bet_data)
 
     if len(bet_data) > 0:
         for bet in bet_data:

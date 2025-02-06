@@ -17,6 +17,10 @@ class Roulette:
 
     def get_balance(self) -> int:
         return self.balance
+    
+    def reset(self) -> None:
+        self.balance = 100
+        self.active_bets = []
 
     def bet(self, amount:int, bet:str) -> None:
         if amount > self.balance:
@@ -47,6 +51,19 @@ class Roulette:
         self.active_bets = []
 
         return gain
+    
+    def martingale(self, amount: int, bet: str, objectif: int = None, iterations: int = None):
+        amount_raised: int = amount
+
+        if objectif is None:
+            for i in range(iterations):
+                self.bet(amount_raised, bet)
+                number: Number = self.play()
+                gain: int = self.check_bet(number)
+                if gain == 0:
+                    amount_raised *= 2
+                else:
+                    amount_raised = amount
 
     def main(self) -> None:
         play_number = str(input("Choisir un numéro entre 0 et 36 : "))

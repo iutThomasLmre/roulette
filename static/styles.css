@@ -27,7 +27,8 @@ body {
     background-color: #57f287;
 }
 
-.red {
+.red,
+.primary {
     background-color: #5a77fe;
 }
 
@@ -35,9 +36,36 @@ body {
     background-color: #393939;
 }
 
+.disabled {
+    background-color: #393939CC;
+}
+
+.xs {
+    background-color: #484848;
+}
+
+.s {
+    background-color: #ff6e6e;
+}
+
+.sm {
+    background-color: #ffc869;
+}
+
+.m {
+    background-color: #a558ff;
+}
+
+.l {
+    background-color: #ff599a;
+}
+
+.xl {
+    background-color: #63ff97;
+}
 
 .game-container {
-    height: 512px;
+    height: 576px;
 
     .game-wrapper {
         height: 100%;
@@ -121,40 +149,38 @@ body {
                                 cursor: pointer;
                                 user-select: none;
 
-                                &.xs {
-                                    background-color: #484848;
-                                }
-
-                                &.s {
-                                    background-color: #ff6e6e;
-                                }
-
-                                &.sm {
-                                    background-color: #ffc869;
-                                }
-
-                                &.m {
-                                    background-color: #a558ff;
-                                }
-
-                                &.l {
-                                    background-color: #ff599a;
-                                }
-
-                                &.xl {
-                                    background-color: #63ff97;
-                                }
-
-                                &.selected {
+                                &.active {
                                     border: 1px solid #f9fafa;
                                 }
                             }
                         }
 
-                        .value-balance,
+                        .group-balance {
+                            display: flex;
+                            gap: 8px;
+
+                            .action-item {
+                                flex: 1;
+                                height: var(--number-size);
+                                min-width: var(--number-size);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                user-select: none;
+                                font-size: 14px;
+                                font-weight: 600;
+                            }
+                        }
+
+                        .group-balance .value-balance,
                         .betting-amount {
                             width: 100%;
-                            padding: 12px 16px;
+                            padding: 0 16px;
+                            height: var(--number-size);
+                            display: flex;
+                            align-items: center;
                             background-color: #222;
                             border-radius: 4px;
                             user-select: none;
@@ -176,14 +202,6 @@ body {
                                 user-select: none;
                                 font-size: 14px;
                                 font-weight: 600;
-
-                                &.primary {
-                                    background-color: #5a77fe;
-                                }
-
-                                &.disabled {
-                                    background-color: #393939CC;
-                                }
                             }
                         }
                     }
@@ -213,7 +231,7 @@ body {
                         position: relative;
 
                         .wheel-object {
-                            top: 50px;
+                            top: 66px;
                             left: calc(50% - 200px);
                             transition: .3s ease-in-out 0s all;
                             transform-origin: center center !important;
@@ -276,22 +294,25 @@ body {
                                     user-select: none;
                                     font-size: 14px;
                                     font-weight: 600;
+                                    position: relative;
+
+                                    .bet-chip-item {
+                                        position: absolute;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        color: #1c1c1c;
+                                        width: 30px;
+                                        height: 30px;
+                                        border-radius: 50%;
+                                        bottom: 0;
+                                        left: 0;
+                                    }
 
                                     &.active {
                                         align-items: flex-start;
                                         justify-content: flex-end;
                                         position: relative;
-
-                                        &::before {
-                                            position: absolute;
-                                            content: '';
-                                            width: 20px;
-                                            height: 20px;
-                                            background-color: #f9fafa;
-                                            border-radius: 50%;
-                                            bottom: 0;
-                                            left: 0;
-                                        }
                                     }
                                 }
                             }
@@ -318,20 +339,15 @@ body {
                                     font-size: 14px;
                                     font-weight: 600;
 
-                                    &.active {
-                                        position: relative;
-
-                                        &::before {
-                                            position: absolute;
-                                            content: '';
-                                            width: 20px;
-                                            height: 20px;
-                                            background-color: #f9fafa;
-                                            border-radius: 50%;
-                                            bottom: 50%;
-                                            left: 50%;
-                                            transform: translate(-50%, 50%);
-                                        }
+                                    .bet-chip-item {
+                                        position: absolute;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        color: #1c1c1c;
+                                        width: 30px;
+                                        height: 30px;
+                                        border-radius: 50%;
                                     }
 
                                     &.black {
@@ -346,6 +362,19 @@ body {
                         }
                     }
                 }
+            }
+        }
+
+        .auto-game-container {
+            width: 30%;
+            height: 100%;
+
+            .auto-game-wrapper {
+                height: 100%;
+                width: 100%;
+                border: 1px solid rgb(39 40 40 / 1);
+                background-color: #1c1c1c;
+                border-radius: 8px;
             }
         }
     }
