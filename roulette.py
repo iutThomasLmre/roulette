@@ -54,12 +54,14 @@ class Roulette:
     
     def martingale(self, amount: int, bet: str, objectif: int = None, iterations: int = None):
         amount_raised: int = amount
+        balance_hisory: list[int] = []
 
         if objectif is None:
             for i in range(iterations):
                 self.bet(amount_raised, bet)
                 number: Number = self.play()
                 gain: int = self.check_bet(number)
+                balance_hisory.append(self.balance)
                 if gain == 0:
                     amount_raised *= 2
                 else:
@@ -71,18 +73,26 @@ class Roulette:
                 self.bet(amount_raised, bet)
                 number: Number = self.play()
                 gain: int = self.check_bet(number)
+                balance_hisory.append(self.balance)
                 if gain == 0:
                     amount_raised *= 2
                 else:
                     amount_raised = amount
+        
+        return balance_hisory
     
     def hardi(self, bet: str, objectif: int):
+        balance_hisory: list[int] = []
         objectif = objectif if objectif > self.balance else objectif + self.balance
+
         while objectif > self.balance and self.balance > 0:
             amount_raised = self.balance if objectif - self.balance * 2 > 0 else objectif - self.balance
             self.bet(amount_raised, bet)
             number: Number = self.play()
             self.check_bet(number)
+            balance_hisory.append(self.balance)
+
+        return balance_hisory
 
 
     def main(self) -> None:

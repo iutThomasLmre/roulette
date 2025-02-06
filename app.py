@@ -23,7 +23,7 @@ def new_game():
 def martingale():
     bet_data = request.json
 
-    print(bet_data)
+    balance_history = []
 
     bet = bet_data["bet"]["bet"]
     bet_value = int(bet_data["bet"]["value"])
@@ -31,11 +31,11 @@ def martingale():
     objectif = int(bet_data["objectif"])
 
     if iterations == 0 or iterations is None:
-        game.martingale(bet_value, bet, objectif=objectif)
+        balance_history = game.martingale(bet_value, bet, objectif=objectif)
     else:
-        game.martingale(bet_value, bet, iterations=iterations)
+        balance_history = game.martingale(bet_value, bet, iterations=iterations)
 
-    return jsonify({ "message": "Martingale réalisée" })
+    return jsonify({ "message": "Martingale réalisée", "balance_history": balance_history })
 
 @app.route('/hardi', methods=['POST'])
 def hardi():
@@ -44,9 +44,9 @@ def hardi():
     bet = bet_data["bet"]["bet"]
     objectif = int(bet_data["objectif"])
 
-    game.hardi(bet, objectif)
+    balance_history = game.hardi(bet, objectif)
 
-    return jsonify({ "message": "Hardi réalisée" })
+    return jsonify({ "message": "Hardi réalisée", "balance_history": balance_history })
 
 
 @app.route('/bet', methods=['POST'])

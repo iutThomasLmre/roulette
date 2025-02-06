@@ -11,12 +11,15 @@ let balance = 100;
 let history = [];
 let totalBet = 0;
 
-let strategieBet = { type: "Martingale", bet: { value: 0, bet: ""}, objectif: 0, iterations: 0}
+let strategieBet = { type: "Martingale", bet: { value: 0, bet: "" }, objectif: 0, iterations: 0 }
 let strategieColorElements = document.querySelectorAll(".item-color-strategie");
 let strategieColor;
 let strategieObjectif;
 let strategieIterations;
 let strategieType = "Martingale";
+
+let balanceHistory = []
+let labels = []
 
 const MAP_WHEEL = [
     { number: 0, deg: 0 },
@@ -63,19 +66,19 @@ const toggleActive = (element, add) => {
 };
 
 const placeChip = (element, bet) => {
-    element.innerHTML 
-    = `${element.getAttribute('id')}<div class="bet-chip-item ${bet.value >= 500 ? "xl" : bet.value >= 100 ? "l" : bet.value >= 50 ? "m" : bet.value >= 10 ? "sm" : bet.value >= 5 ? "s" : "xs"}">${bet.value}</div>`;
+    element.innerHTML
+        = `${element.getAttribute('id')}<div class="bet-chip-item ${bet.value >= 500 ? "xl" : bet.value >= 100 ? "l" : bet.value >= 50 ? "m" : bet.value >= 10 ? "sm" : bet.value >= 5 ? "s" : "xs"}">${bet.value}</div>`;
 }
 
 const placeBet = (bet) => {
     console.log(chipValue, balance);
 
-    if(chipValue > balance)
+    if (chipValue > balance)
         return;
 
     bet = { ...bet, value: chipValue };
     let existingBet = bets.find(b => b.bet === bet.bet);
-    existingBet ? existingBet.value+=chipValue : bets.push(bet);
+    existingBet ? existingBet.value += chipValue : bets.push(bet);
     totalBet += chipValue;
     updateTotalBet();
     return existingBet ?? bet;
@@ -93,8 +96,10 @@ const removeAllBets = () => {
         element.innerHTML = element.getAttribute("id");
     });
     bets = [];
+    balance += totalBet
+    document.getElementById('balance').innerText = balance;
     totalBet = 0;
-    updateTotalBet();
+    document.getElementById("total-bet").innerHTML = totalBet;
 };
 
 function updateBalance() {
@@ -102,13 +107,16 @@ function updateBalance() {
         .then(response => response.json())
         .then(data => {
             balance = data.balance;
+            balanceHistory.push(balance)
+            labels.push(labels.length)
+            balanceChart.update();
             document.getElementById('balance').innerText = balance;
         });
 }
 
 const updateResult = (result) => {
     history.push(result);
-    
+
     if (history.length > 5) {
         history.shift();
     }
@@ -120,10 +128,10 @@ const spinWheel = (result) => {
     let wheel = document.getElementById("wheel");
     let deg = MAP_WHEEL.find(w => w.number == result.number).deg;
     let totalRotation = -deg + (360 * 3);
-    
+
     wheel.style.transition = "transform 4s ease-out";
     wheel.style.transform = `rotate(${totalRotation}deg)`;
-    
+
     setTimeout(() => {
         wheel.style.transition = "none";
         wheel.style.transform = `rotate(${-deg}deg)`;
@@ -150,7 +158,7 @@ betElements.forEach(element => {
 strategiesElements.forEach(element => {
     element.addEventListener("click", () => {
         strategiesElements.forEach(strategiesSelected => {
-                strategiesSelected.classList.remove("primary");
+            strategiesSelected.classList.remove("primary");
         });
 
         element.classList.add("primary");
@@ -160,11 +168,11 @@ strategiesElements.forEach(element => {
             document.querySelectorAll(".martingale").forEach(element => {
                 element.style.display = "flex";
             });
-        else 
-        document.querySelectorAll(".martingale").forEach(element => {
-            element.style.display = "none";
-        });
-        
+        else
+            document.querySelectorAll(".martingale").forEach(element => {
+                element.style.display = "none";
+            });
+
     });
 });
 strategieColorElements.forEach(element => {
@@ -183,7 +191,7 @@ chips.forEach(chip => {
         chipValue = parseInt(chip.innerHTML);
 
         chips.forEach(chipSelected => {
-            if(chip == chipSelected)
+            if (chip == chipSelected)
                 toggleActive(chip, true);
             else
                 toggleActive(chipSelected, false);
@@ -199,11 +207,11 @@ const sendBets = () => {
         },
         body: JSON.stringify(bets)
     })
-    .then(response => response.json())
-    .then(data => {
-        updateResult(data.result);
-    })
-    .catch(error => console.error("Error sending bets:", error));
+        .then(response => response.json())
+        .then(data => {
+            updateResult(data.result);
+        })
+        .catch(error => console.error("Error sending bets:", error));
 };
 
 const sendNewGame = () => {
@@ -213,11 +221,11 @@ const sendNewGame = () => {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        updateBalance();
-    })
-    .catch(error => console.error("Error sending bets:", error));
+        .then(response => response.json())
+        .then(data => {
+            updateBalance();
+        })
+        .catch(error => console.error("Error sending bets:", error));
 }
 
 PLAY.addEventListener("click", () => {
@@ -234,11 +242,17 @@ const sendMartingale = () => {
         },
         body: JSON.stringify(strategieBet)
     })
-    .then(response => response.json())
-    .then(data => {
-        updateBalance();
-    })
-    .catch(error => console.error("Error sending bets:", error));
+        .then(response => response.json())
+        .then(data => {
+            data.balance_history.forEach((balance, index) => {
+                if (index < data.balance_history.length - 1) {
+                    balanceHistory.push(balance);
+                    labels.push(index + 1);
+                }
+            })
+            updateBalance();
+        })
+        .catch(error => console.error("Error sending bets:", error));
 }
 
 const sendHardi = () => {
@@ -249,11 +263,17 @@ const sendHardi = () => {
         },
         body: JSON.stringify(strategieBet)
     })
-    .then(response => response.json())
-    .then(data => {
-        updateBalance();
-    })
-    .catch(error => console.error("Error sending bets:", error));
+        .then(response => response.json())
+        .then(data => {
+            data.balance_history.forEach((balance, index) => {
+                if (index < data.balance_history.length - 1) {
+                    balanceHistory.push(balance);
+                    labels.push(index + 1);
+                }
+            })
+            updateBalance();
+        })
+        .catch(error => console.error("Error sending bets:", error));
 }
 
 document.getElementById("play-strategie").addEventListener("click", () => {
@@ -268,3 +288,41 @@ document.getElementById("play-strategie").addEventListener("click", () => {
     else
         sendHardi();
 });
+
+
+const ctx = document.getElementById('balanceChart').getContext('2d');
+const balanceChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Évolution de la balance',
+            data: balanceHistory,
+            borderColor: '#57f287',
+            backgroundColor: '#57f287CC',
+            borderWidth: 2,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Tours'
+                }
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: 'Balance'
+                },
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+updateBalance();
