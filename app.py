@@ -17,7 +17,37 @@ def get_balance():
 @app.route('/new', methods=['GET'])
 def new_game():
     game.reset()
-    return jsonify({"message": "Nouvelle roulette créée", "balance": game.get_balance()})
+    return jsonify({ "message": "Nouvelle roulette créée", "balance": game.get_balance() })
+
+@app.route('/martingale', methods=['POST'])
+def martingale():
+    bet_data = request.json
+
+    print(bet_data)
+
+    bet = bet_data["bet"]["bet"]
+    bet_value = int(bet_data["bet"]["value"])
+    iterations = int(bet_data["iterations"])
+    objectif = int(bet_data["objectif"])
+
+    if iterations == 0 or iterations is None:
+        game.martingale(bet_value, bet, objectif=objectif)
+    else:
+        game.martingale(bet_value, bet, iterations=iterations)
+
+    return jsonify({ "message": "Martingale réalisée" })
+
+@app.route('/hardi', methods=['POST'])
+def hardi():
+    bet_data = request.json
+
+    bet = bet_data["bet"]["bet"]
+    objectif = int(bet_data["objectif"])
+
+    game.hardi(bet, objectif)
+
+    return jsonify({ "message": "Hardi réalisée" })
+
 
 @app.route('/bet', methods=['POST'])
 def bet():

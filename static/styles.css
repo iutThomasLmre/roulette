@@ -29,7 +29,7 @@ body {
 
 .red,
 .primary {
-    background-color: #5a77fe;
+    background-color: #5a77fe !important;
 }
 
 .black {
@@ -72,14 +72,16 @@ body {
         display: flex;
         gap: 16px;
 
-        .bet-container {
+        .bet-container,
+        .auto-game-container {
             height: 100%;
             width: 30%;
             border: 1px solid rgb(39 40 40 / 1);
             background-color: #1c1c1c;
             border-radius: 8px;
 
-            .bet-wrapper {
+            .bet-wrapper,
+            .auto-game-wrapper {
                 display: flex;
                 flex-direction: column;
                 gap: 16px;
@@ -91,13 +93,19 @@ body {
                 .history-container,
                 .balance-container,
                 .betting-container,
-                .actions-container {
+                .actions-container,
+                .strategies-container,
+                .strategie-form-container,
+                .strategies-play-container {
                     width: 100%;
 
                     .history-wrapper,
                     .balance-wrapper,
                     .betting-wrapper,
-                    .actions-wrapper {
+                    .actions-wrapper,
+                    .strategies-wrapper,
+                    .strategie-form-wrapper,
+                    .strategies-play-wrapper {
                         display: flex;
                         flex-direction: column;
                         gap: 12px;
@@ -105,7 +113,9 @@ body {
                         .title-history,
                         .title-balance,
                         .title-betting,
-                        .title-actions {
+                        .title-actions,
+                        .title-strategies,
+                        .title {
                             font-size: 18px;
                             font-weight: 600;
                             color: #8d8d8d;
@@ -186,12 +196,16 @@ body {
                             user-select: none;
                         }
 
-                        .group-actions {
+                        .group-actions,
+                        .group-strategies,
+                        .group-colors {
                             display: flex;
                             justify-content: space-between;
                             gap: 8px;
 
-                            .action-item {
+                            .action-item,
+                            .strategie-item,
+                            .item-color-strategie {
                                 flex: 1;
                                 height: var(--number-size);
                                 display: flex;
@@ -202,6 +216,35 @@ body {
                                 user-select: none;
                                 font-size: 14px;
                                 font-weight: 600;
+
+                                &.red {
+                                    color: #5a77fe;
+                                }
+
+                                &.black {
+                                    color: #393939;
+                                }
+
+                                &.active {
+                                    border: 1px solid #f9fafa;
+                                }
+                            }
+                        }
+
+                        input {
+                            width: 100%;
+                            padding: 0 16px;
+                            height: var(--number-size);
+                            display: flex;
+                            align-items: center;
+                            background-color: #222;
+                            color: #f9fafa;
+                            border-radius: 4px;
+                            user-select: none; 
+                            border: none;
+                            
+                            &:focus {
+                                outline: none;
                             }
                         }
                     }
@@ -301,6 +344,8 @@ body {
                                         display: flex;
                                         align-items: center;
                                         justify-content: center;
+                                        font-size: 12px;
+                                        font-weight: 700;
                                         color: #1c1c1c;
                                         width: 30px;
                                         height: 30px;
@@ -344,6 +389,8 @@ body {
                                         display: flex;
                                         align-items: center;
                                         justify-content: center;
+                                        font-size: 12px;
+                                        font-weight: 700;
                                         color: #1c1c1c;
                                         width: 30px;
                                         height: 30px;
@@ -362,19 +409,6 @@ body {
                         }
                     }
                 }
-            }
-        }
-
-        .auto-game-container {
-            width: 30%;
-            height: 100%;
-
-            .auto-game-wrapper {
-                height: 100%;
-                width: 100%;
-                border: 1px solid rgb(39 40 40 / 1);
-                background-color: #1c1c1c;
-                border-radius: 8px;
             }
         }
     }

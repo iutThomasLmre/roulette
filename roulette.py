@@ -64,6 +64,26 @@ class Roulette:
                     amount_raised *= 2
                 else:
                     amount_raised = amount
+        
+        if iterations is None:
+            objectif = objectif if objectif > self.balance else objectif + self.balance
+            while objectif > self.balance and amount_raised <= self.balance:
+                self.bet(amount_raised, bet)
+                number: Number = self.play()
+                gain: int = self.check_bet(number)
+                if gain == 0:
+                    amount_raised *= 2
+                else:
+                    amount_raised = amount
+    
+    def hardi(self, bet: str, objectif: int):
+        objectif = objectif if objectif > self.balance else objectif + self.balance
+        while objectif > self.balance and self.balance > 0:
+            amount_raised = self.balance if objectif - self.balance * 2 > 0 else objectif - self.balance
+            self.bet(amount_raised, bet)
+            number: Number = self.play()
+            self.check_bet(number)
+
 
     def main(self) -> None:
         play_number = str(input("Choisir un numéro entre 0 et 36 : "))
@@ -81,6 +101,14 @@ class Roulette:
 # game = Roulette()
 # end: bool = False
 # while not end:
-#     game.main()
-#     if game.get_balance() <= 0:
-#         end = True
+#     game.martingale(1, "R", iterations=10)
+#     print(game.get_balance())
+
+#     game.reset()
+#     game.martingale(1, "R", objectif=500)
+#     print(game.get_balance())
+
+#     game.reset()
+#     game.hardi("R", 500)
+#     print(game.get_balance())
+#     end =True

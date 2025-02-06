@@ -4,11 +4,19 @@ const NEW = document.getElementById("new");
 
 let betElements = document.querySelectorAll(".item-bet-number, .item-bet-color");
 let chips = document.querySelectorAll(".betting-item");
+let strategiesElements = document.querySelectorAll(".strategie-item");
 let chipValue = 1;
 let bets = [];
 let balance = 100;
 let history = [];
 let totalBet = 0;
+
+let strategieBet = { type: "Martingale", bet: { value: 0, bet: ""}, objectif: 0, iterations: 0}
+let strategieColorElements = document.querySelectorAll(".item-color-strategie");
+let strategieColor;
+let strategieObjectif;
+let strategieIterations;
+let strategieType = "Martingale";
 
 const MAP_WHEEL = [
     { number: 0, deg: 0 },
@@ -139,6 +147,37 @@ betElements.forEach(element => {
     });
 });
 
+strategiesElements.forEach(element => {
+    element.addEventListener("click", () => {
+        strategiesElements.forEach(strategiesSelected => {
+                strategiesSelected.classList.remove("primary");
+        });
+
+        element.classList.add("primary");
+        strategieType = element.innerHTML;
+
+        if (strategieType == "Martingale")
+            document.querySelectorAll(".martingale").forEach(element => {
+                element.style.display = "flex";
+            });
+        else 
+        document.querySelectorAll(".martingale").forEach(element => {
+            element.style.display = "none";
+        });
+        
+    });
+});
+strategieColorElements.forEach(element => {
+    element.addEventListener("click", () => {
+        strategieColorElements.forEach(elementSelected => {
+            elementSelected.classList.remove("active");
+        })
+
+        element.classList.add("active");
+        strategieColor = element.getAttribute("id");
+    });
+});
+
 chips.forEach(chip => {
     chip.addEventListener("click", () => {
         chipValue = parseInt(chip.innerHTML);
@@ -186,3 +225,46 @@ PLAY.addEventListener("click", () => {
 });
 CANCEL.addEventListener("click", removeAllBets);
 NEW.addEventListener("click", sendNewGame);
+
+const sendMartingale = () => {
+    fetch('/martingale', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(strategieBet)
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateBalance();
+    })
+    .catch(error => console.error("Error sending bets:", error));
+}
+
+const sendHardi = () => {
+    fetch('/hardi', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(strategieBet)
+    })
+    .then(response => response.json())
+    .then(data => {
+        updateBalance();
+    })
+    .catch(error => console.error("Error sending bets:", error));
+}
+
+document.getElementById("play-strategie").addEventListener("click", () => {
+    strategieBet.type = strategieType;
+    strategieBet.bet.bet = strategieColor;
+    strategieBet.bet.value = document.getElementById("strategie-mise").value;
+    strategieBet.objectif = document.getElementById("strategie-objectif").value;
+    strategieBet.iterations = document.getElementById("strategie-iterations").value;
+
+    if (strategieType == "Martingale")
+        sendMartingale();
+    else
+        sendHardi();
+});
